@@ -14,20 +14,21 @@ from netCDF4 import Dataset
 import sys
 import os
 
-#filegrid = sys.argv[1]
-#fileraster = sys.argv[2]
-#fileext = sys.argv[3]
+filegrid = sys.argv[1]
+fileraster = sys.argv[2]
+fileext = sys.argv[3]
 
-filegrid = '/home/titik/kmeans/parallel-kmeans-int64/outsawah.nc'
+#filegrid = '/home/titik/kmeans/parallel-kmeans-int64/outsawah.nc'
 
-filegrid = '/home/titik/TXT/Sawah_2015.tif.nc'
-fileraster = '/home/titik/TXT/Sawah_2015.tif'
-fileext = 'nc'
+#filegrid = '/home/titik/TXT/Sawah_2015.tif.txt.membership'
+#fileraster = '/home/titik/TXT/Sawah_2015.tif'
+#fileext = 'nc'
 
 def baca_txt(filename,rows,cols):
-    with open(filename) as csvfile:
-        reader = csv.DictReader(csvfile)
-        grid = reader.transpose().reshape(1,rows,cols)
+    reader = np.loadtxt(filename)
+    #with open(filename) as csvfile:
+    #    reader = csv.DictReader(csvfile)
+    grid = reader.transpose().reshape(2,rows,cols)
     return grid;
     
 def baca_nc(filename,rows,cols):
@@ -51,8 +52,11 @@ with rasterio.open(fileraster) as src:
    
 if fileext == 'txt':
     image = baca_txt(filegrid,rows,cols)
+    plt.imshow(image[1,:,:])
+    plt.colormaps()
+    plt.show()
     with rasterio.open(fileraster+'hasil.tif', 'w', **profile) as dst:
-        dst.write(image.astype(rasterio.uint16),1)
+        dst.write(image[1,:,:].astype(rasterio.uint16),1)
     
 elif fileext == 'nc':
     nc5to4 = 'ncks '+ filegrid + ' -4 ' + filegrid +'.4.nc' 

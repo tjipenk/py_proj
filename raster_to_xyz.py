@@ -56,11 +56,15 @@ def raster_to_2d(filename):
 
 def tulis_txt(filename, export):
     fname=filename+'.txt'
-    with open(fname, 'w') as fp:
-        a = csv.writer(fp, delimiter=',')
-        a.writerows(export)
-        fp.close() # close file
-    print(fname)
+    n = export.shape[0]    
+    ncell = np.arange(0,n)
+    export = np.column_stack((ncell, export))
+    np.savetxt(fname,export, fmt='%1.f')
+#    with open(fname, 'w') as fp:
+#        a = csv.writer(fp, delimiter=',')
+#        a.writerows(export)
+#        fp.close() # close file
+    print(fname)   
     return;
     
 def tulis_nc(filename, export):
